@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muizuddin — IT Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e28;
+    --border: #252935;
+    --accent: #c8a96e;
+    --accent2: #7eb8c9;
+    --text: #e8e6e0;
+    --muted: #7a7f8e;
+    --subtle: #3a3f50;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13,15,20,0.88);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.25s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 4rem;
+    padding: 8rem 3rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 5vw, 5.2rem);
+    line-height: 1.05;
+    color: var(--text);
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.8;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0d0f14;
+    border: 1px solid var(--accent);
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  .hero-card {
+    position: relative;
+    animation: fadeLeft 0.9s 0.2s ease both;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-img-wrap {
+    position: relative;
+    width: 300px;
+  }
+
+  .hero-img-bg {
+    position: absolute;
+    inset: -12px -12px 12px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    z-index: 0;
+  }
+
+  .hero-img-accent {
+    position: absolute;
+    inset: -24px -24px 24px 24px;
+    border: 1px solid var(--subtle);
+    border-radius: 4px;
+    z-index: 0;
+  }
+
+  .hero-avatar-placeholder {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 380px;
+    background: var(--surface2);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    gap: 1rem;
+  }
+
+  .hero-avatar-placeholder .avatar-icon {
+    font-size: 5rem;
+    line-height: 1;
+  }
+
+  .hero-avatar-placeholder .avatar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--subtle);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .hero-badge {
+    position: absolute;
+    bottom: -16px;
+    left: -16px;
+    z-index: 2;
+    background: var(--accent);
+    color: #0d0f14;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 40px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    color: var(--text);
+    margin-bottom: 3rem;
+    line-height: 1.15;
+  }
+
+  .full-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+    margin: 0;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 1rem;
+  }
+
+  .about-text p strong { color: var(--text); font-weight: 500; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .stat-card:hover::before { transform: scaleX(1); }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* SKILLS */
+  .skills-bg {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skills-inner {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 1rem;
+  }
+
+  .skill-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--text);
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .skill-pill:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .skill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--subtle);
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+
+  .project-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .project-subtitle {
+    font-size: 0.78rem;
+    color: var(--accent2);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    letter-spacing: 0.06em;
+  }
+
+  /* EXPERIENCE */
+  .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .exp-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: all 0.3s;
+    align-items: start;
+  }
+
+  .exp-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+
+  .exp-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 3px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .exp-company {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .exp-role {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .exp-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
+
+  /* CERTS */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem;
+    transition: all 0.25s;
+  }
+
+  .cert-card:hover {
+    border-color: var(--accent2);
+    transform: translateY(-3px);
+  }
+
+  .cert-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .cert-name { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; }
+  .cert-type { font-size: 0.73rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* CONTACT */
+  .contact-wrap {
+    text-align: center;
+    padding: 6rem 3rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .contact-wrap h2 { margin-bottom: 1rem; }
+
+  .contact-wrap p {
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+
+  .contact-item:hover { border-color: var(--accent); color: var(--accent); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.8rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--subtle);
+    font-size: 0.73rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.055;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -200px; }
+  .blob-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 20%; left: -150px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .hero-card { order: -1; }
+    .hero-img-wrap { width: 220px; }
+    .hero-avatar-placeholder { height: 270px; }
+    .about-grid, .projects-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .cert-grid { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+    .skills-inner { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <div class="nav-logo">Muizuddin.dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div style="max-width:1200px;margin:0 auto;">
+  <section id="hero" style="margin:0;">
+    <div>
+      <div class="hero-tag">Open to Opportunities</div>
+      <h1>Muhammad<br><em>Muizuddin</em><br>Bin Elias</h1>
+      <p class="hero-sub">IT undergraduate passionate about programming, design, and building systems that work — based in Kuala Lumpur, Malaysia.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-img-wrap">
+        <div class="hero-img-accent"></div>
+        <div class="hero-img-bg"></div>
+        <div class="hero-avatar-placeholder">
+          <span class="avatar-icon">👤</span>
+          <span class="avatar-label">Muizuddin · IT Student</span>
+        </div>
+        <div class="hero-badge">2024 – 2027 · UniKL MIIT</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">Who I Am</div>
+  <h2>About Me</h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I am a <strong>diploma student in Information Technology</strong> with a foundation in programming, design, and communication. My academic journey has equipped me with hands-on experience in database systems, object-oriented analysis and design, and operating systems.</p>
+      <p>I am constantly working to improve my <strong>programming and English communication skills</strong> — driven by a genuine curiosity and a desire to grow both technically and professionally.</p>
+      <p>Based in <strong>Kuala Lumpur, Malaysia</strong>, I am open to internships, collaborative projects, and opportunities that challenge me to create real-world impact through technology.</p>
+    </div>
+    <div class="stats-grid reveal">
+      <div class="stat-card">
+        <span class="stat-num">2</span>
+        <div class="stat-label">Projects Completed</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">6+</span>
+        <div class="stat-label">Skills Acquired</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">3</span>
+        <div class="stat-label">Certifications</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">2</span>
+        <div class="stat-label">Work Experiences</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- SKILLS -->
+<div class="skills-bg" id="skills">
+  <div class="skills-inner">
+    <div class="section-label">What I Know</div>
+    <h2>Skills & Tools</h2>
+    <div class="skills-grid reveal">
+      <div class="skill-pill"><span class="skill-dot"></span> Java</div>
+      <div class="skill-pill"><span class="skill-dot"></span> PHP</div>
+      <div class="skill-pill"><span class="skill-dot"></span> MySQL</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Database Design</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Draw.io</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Figma</div>
+      <div class="skill-pill"><span class="skill-dot"></span> UI / UX Design</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Git & GitHub</div>
+      <div class="skill-pill"><span class="skill-dot"></span> SDLC</div>
+      <div class="skill-pill"><span class="skill-dot"></span> NetBeans IDE</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Teamwork</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Communication</div>
+    </div>
+  </div>
+</div>
+
+<div class="full-divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">What I've Built</div>
+  <h2>Projects</h2>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-num">01 · 2025</div>
+      <div class="project-title">Student Attendance System</div>
+      <div class="project-subtitle">Design & Create</div>
+      <p class="project-desc">Designed and developed a complete student attendance tracking system. Used Draw.io to create system flow diagrams including Waterfall methodology charts and a relational database schema. Designed the mobile application interface in Figma for a smooth, intuitive user experience.</p>
+      <div class="project-tags">
+        <span class="tag">Draw.io</span>
+        <span class="tag">Figma</span>
+        <span class="tag">UX Design</span>
+        <span class="tag">Relational DB</span>
+        <span class="tag">Waterfall</span>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-num">02</div>
+      <div class="project-title">Currency Converter System</div>
+      <div class="project-subtitle">Coding & Calculation</div>
+      <p class="project-desc">Built a currency converter application using Java that handles exchange rate calculations between multiple countries with different currency values. Developed in NetBeans IDE, demonstrating proficiency in Java programming, logic building, and arithmetic operations.</p>
+      <div class="project-tags">
+        <span class="tag">Java</span>
+        <span class="tag">NetBeans</span>
+        <span class="tag">OOP</span>
+        <span class="tag">Logic & Calc</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Where I've Been</div>
+  <h2>Work Experience</h2>
+  <div class="exp-list">
+    <div class="exp-card reveal">
+      <div class="exp-icon">🏢</div>
+      <div>
+        <div class="exp-company">SIBS · Selangor International Business Summit</div>
+        <div class="exp-role">Event Crew Member</div>
+        <p class="exp-desc">Served as part of the launch crew for the Selangor International Business Summit — managing media coverage responsibilities, food & beverage coordination, and staffing the information counters during the event. Developed strong teamwork and event-management skills.</p>
+      </div>
+    </div>
+    <div class="exp-card reveal">
+      <div class="exp-icon">🍌</div>
+      <div>
+        <div class="exp-company">Pishang Bites · Kiosk Operations</div>
+        <div class="exp-role">F&B Service Staff</div>
+        <p class="exp-desc">Worked at kiosk locations across Ampang and Saloma Bridge, handling customer order-taking, food preparation, and service delivery. Built strong communication, time management, and customer service capabilities in a fast-paced environment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- EDUCATION & CERTS -->
+<section id="education">
+  <div class="section-label">Credentials</div>
+  <h2>Education & Certifications</h2>
+
+  <div class="exp-card reveal">
+    <div class="exp-icon">🎓</div>
+    <div>
+      <div class="exp-company">2024 – 2027 · UniKL MIIT, Kuala Lumpur</div>
+      <div class="exp-role">Diploma in Information Technology</div>
+      <p class="exp-desc">Currently studying at UniKL Malaysian Institute of Information Technology, covering database systems, object-oriented analysis and design, programming languages, operating systems, and software development methodologies.</p>
+    </div>
+  </div>
+
+  <div class="cert-grid">
+    <div class="cert-card reveal">
+      <div class="cert-icon">📜</div>
+      <div class="cert-name">Malaysian Certificate of Education</div>
+      <div class="cert-type">SPM · Secondary Education</div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">💻</div>
+      <div class="cert-name">GitHub Workshop</div>
+      <div class="cert-type">Version Control & Collaboration</div>
+    </div>
+    <div class="cert-card reveal">
+      <div class="cert-icon">🔄</div>
+      <div class="cert-name">SDLC Certification</div>
+      <div class="cert-type">Software Development Life Cycle</div>
+    </div>
+  </div>
+</section>
+
+<div class="full-divider"></div>
+
+<!-- CONTACT -->
+<div id="contact">
+  <div class="contact-wrap">
+    <div class="section-label" style="justify-content:center;">Let's Connect</div>
+    <h2>Get in Touch</h2>
+    <p>Whether you have an opportunity, a project idea, or just want to say hello — I'm happy to talk tech, design, and everything in between.</p>
+    <a href="mailto:muizuddin.elias@s.unikl.edu.my" class="btn btn-primary">Send an Email →</a>
+    <div class="contact-links">
+      <a href="tel:+60137877998" class="contact-item">📞 +60 13-787 7998</a>
+      <a href="mailto:muizuddin.elias@s.unikl.edu.my" class="contact-item">✉️ muizuddin.elias@s.unikl.edu.my</a>
+      <div class="contact-item">📍 Kuala Lumpur, Malaysia</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Muhammad Muizuddin Bin Elias</span>
+  <span>IT Undergraduate · Kuala Lumpur, MY</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
