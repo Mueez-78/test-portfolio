@@ -13,9 +13,10 @@
     --border: #252935;
     --accent: #c8a96e;
     --accent2: #7eb8c9;
+    --accent-glow: rgba(200, 169, 110, 0.15);
     --text: #e8e6e0;
-    --muted: #7a7f8e;
-    --subtle: #3a3f50;
+    --muted: #9ba0b0;
+    --subtle: #4a5065;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,6 +52,7 @@
     background: rgba(13,15,20,0.88);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
   }
 
   .nav-logo {
@@ -59,6 +61,7 @@
     color: var(--accent);
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    font-weight: 500;
   }
 
   .nav-links {
@@ -69,7 +72,7 @@
 
   .nav-links a {
     text-decoration: none;
-    color: var(--muted);
+    color: var(--text);
     font-size: 0.82rem;
     font-weight: 400;
     letter-spacing: 0.08em;
@@ -124,11 +127,18 @@
 
   .hero-sub {
     margin-top: 1.5rem;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--muted);
-    max-width: 420px;
+    max-width: 480px;
     line-height: 1.8;
     animation: fadeUp 0.8s 0.2s ease both;
+    min-height: 60px;
+  }
+
+  .typewriter {
+    border-right: 2px solid var(--accent);
+    padding-right: 5px;
+    animation: blinkCursor 0.8s infinite normal;
   }
 
   .hero-cta {
@@ -144,14 +154,14 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.75rem;
-    border-radius: 3px;
+    border-radius: 4px;
     font-size: 0.82rem;
     font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     cursor: pointer;
     text-decoration: none;
-    transition: all 0.25s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'DM Mono', monospace;
   }
 
@@ -159,22 +169,26 @@
     background: var(--accent);
     color: #0d0f14;
     border: 1px solid var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
   }
 
   .btn-primary:hover {
     background: transparent;
     color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--accent-glow);
   }
 
   .btn-ghost {
     background: transparent;
-    color: var(--muted);
+    color: var(--text);
     border: 1px solid var(--border);
   }
 
   .btn-ghost:hover {
     border-color: var(--accent2);
     color: var(--accent2);
+    transform: translateY(-2px);
   }
 
   .hero-card {
@@ -186,7 +200,7 @@
 
   .hero-img-wrap {
     position: relative;
-    width: 300px;
+    width: 320px;
   }
 
   .hero-img-bg {
@@ -194,15 +208,16 @@
     inset: -12px -12px 12px 12px;
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 4px;
+    border-radius: 8px;
     z-index: 0;
+    transition: transform 0.5s ease;
   }
 
   .hero-img-accent {
     position: absolute;
     inset: -24px -24px 24px 24px;
     border: 1px solid var(--subtle);
-    border-radius: 4px;
+    border-radius: 8px;
     z-index: 0;
   }
 
@@ -210,65 +225,112 @@
     position: relative;
     z-index: 1;
     width: 100%;
-    height: 380px;
-    background: var(--surface2);
-    border-radius: 3px;
+    height: 400px;
+    background: linear-gradient(145deg, var(--surface), var(--surface2));
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border: 1px solid var(--border);
     gap: 1rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+
+  /* CSS UNTUK ANIMASI KAD GAMBAR (DIKEMAS KINI) */
+  .hero-image-slider {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    border-radius: 6px;
+    cursor: pointer; /* Tunjuk ikon jari untuk beritahu pengguna ia boleh diklik */
+    perspective: 1000px;
+  }
+
+  .slider-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    /* Kedudukan asal gambar (bersembunyi di belakang) */
+    transform: translateX(40px) scale(0.85) rotate(4deg);
+    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efek pergerakan melantun (bouncy) yang sedap dipandang */
+    pointer-events: none; /* Klik akan dikesan oleh kotak utama, bukan pada gambar secara individu */
+    border-radius: 6px;
+    box-shadow: -5px 5px 15px rgba(0,0,0,0.4);
+  }
+
+  .slider-img.active {
+    /* Bila gambar menjadi aktif, ia akan bergerak ke depan */
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0deg);
+    z-index: 2;
+  }
+
+  .slider-img.slide-out {
+    /* Animasi bila gambar ditukar (swipe keluar ke kiri) */
+    opacity: 0;
+    transform: translateX(-120px) scale(0.9) rotate(-10deg);
+    z-index: 3;
   }
 
   .hero-avatar-placeholder .avatar-icon {
-    font-size: 5rem;
+    font-size: 5.5rem;
     line-height: 1;
+    filter: drop-shadow(0 0 10px rgba(200, 169, 110, 0.2));
+    z-index: 1;
   }
 
   .hero-avatar-placeholder .avatar-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--subtle);
+    font-size: 0.75rem;
+    color: var(--muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    z-index: 1;
   }
 
   .hero-badge {
     position: absolute;
-    bottom: -16px;
-    left: -16px;
-    z-index: 2;
+    bottom: -20px;
+    left: -20px;
+    z-index: 6;
     background: var(--accent);
     color: #0d0f14;
-    padding: 0.6rem 1.2rem;
-    border-radius: 2px;
+    padding: 0.8rem 1.4rem;
+    border-radius: 4px;
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
   }
 
   /* SECTIONS */
-  section { padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
+  section { padding: 7rem 3rem; max-width: 1200px; margin: 0 auto; }
 
   .section-label {
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--accent);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .section-label::after {
     content: '';
     flex: 1;
-    max-width: 40px;
+    max-width: 60px;
     height: 1px;
     background: var(--accent);
     opacity: 0.5;
@@ -276,9 +338,9 @@
 
   h2 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
     color: var(--text);
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     line-height: 1.15;
   }
 
@@ -291,7 +353,7 @@
   /* ABOUT */
   .about-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.2fr 0.8fr;
     gap: 5rem;
     align-items: center;
   }
@@ -299,7 +361,8 @@
   .about-text p {
     color: var(--muted);
     line-height: 1.9;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .about-text p strong { color: var(--text); font-weight: 500; }
@@ -307,29 +370,33 @@
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
+    gap: 1.5rem;
   }
 
   .stat-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.5rem;
+    border-radius: 6px;
+    padding: 1.8rem;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
   }
 
-  .stat-card:hover { border-color: var(--accent); }
+  .stat-card:hover { 
+    border-color: var(--accent); 
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
 
   .stat-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 2px;
+    height: 3px;
     background: var(--accent);
     transform: scaleX(0);
-    transition: transform 0.3s;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: left;
   }
 
@@ -337,91 +404,105 @@
 
   .stat-num {
     font-family: 'DM Serif Display', serif;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     color: var(--accent);
     display: block;
+    line-height: 1;
+    margin-bottom: 0.5rem;
   }
 
-  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+  .stat-label { font-size: 0.85rem; color: var(--text); }
 
   /* SKILLS */
   .skills-bg {
-    background: var(--surface);
+    background: linear-gradient(to bottom, var(--surface), var(--bg));
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
 
   .skills-inner {
-    padding: 6rem 3rem;
+    padding: 7rem 3rem;
     max-width: 1200px;
     margin: 0 auto;
   }
 
   .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.2rem;
   }
 
   .skill-pill {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.2rem 1.4rem;
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 0.88rem;
+    gap: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 400;
     color: var(--text);
-    transition: all 0.25s;
+    transition: all 0.3s ease;
     cursor: default;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
 
   .skill-pill:hover {
     border-color: var(--accent2);
     color: var(--accent2);
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(126, 184, 201, 0.1);
   }
 
   .skill-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent);
   }
 
   /* PROJECTS */
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .project-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
+    border-radius: 8px;
+    padding: 2.5rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    border-color: var(--subtle);
+    background: linear-gradient(145deg, var(--surface2), var(--surface));
   }
 
   .project-card:hover {
     border-color: var(--accent);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
   }
 
   .project-card::after {
     content: '';
     position: absolute;
     bottom: 0; left: 0; right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     transform: scaleX(0);
-    transition: transform 0.3s;
+    transition: transform 0.4s ease;
     transform-origin: left;
   }
 
@@ -429,199 +510,208 @@
 
   .project-num {
     font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--subtle);
+    font-size: 0.75rem;
+    color: var(--muted);
     letter-spacing: 0.15em;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
 
   .project-title {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--text);
-    margin-bottom: 0.35rem;
+    margin-bottom: 0.5rem;
   }
 
   .project-subtitle {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     color: var(--accent2);
     font-family: 'DM Mono', monospace;
     letter-spacing: 0.08em;
-    margin-bottom: 1.25rem;
-  }
-
-  .project-desc {
-    font-size: 0.9rem;
-    color: var(--muted);
-    line-height: 1.8;
     margin-bottom: 1.5rem;
   }
 
-  .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .project-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    flex-grow: 1;
+  }
+
+  .project-tags { 
+    display: flex; 
+    gap: 0.6rem; 
+    flex-wrap: wrap; 
+    margin-top: auto;
+  }
 
   .tag {
     font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 2px;
-    background: var(--surface2);
-    color: var(--muted);
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    background: rgba(26, 30, 40, 0.8);
+    color: var(--text);
     border: 1px solid var(--border);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .project-card:hover .tag {
+    border-color: var(--subtle);
   }
 
   /* EXPERIENCE */
-  .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+  .exp-list { display: flex; flex-direction: column; gap: 1.8rem; }
 
   .exp-card {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
-    transition: all 0.3s;
+    border-radius: 8px;
+    padding: 2.5rem;
+    transition: all 0.3s ease;
     align-items: start;
   }
 
-  .exp-card:hover { box-shadow: 0 8px 40px rgba(0,0,0,0.3); }
+  .exp-card:hover { 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4); 
+    border-color: var(--subtle);
+    transform: translateX(5px);
+  }
 
   .exp-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 3px;
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
     background: var(--surface2);
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     flex-shrink: 0;
   }
 
   .exp-company {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-family: 'DM Mono', monospace;
     color: var(--accent);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
   }
 
   .exp-role {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     color: var(--text);
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
   }
 
-  .exp-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.8; }
-
-  /* CERTS */
-  .cert-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-top: 2.5rem;
-  }
-
-  .cert-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.75rem;
-    transition: all 0.25s;
-  }
-
-  .cert-card:hover {
-    border-color: var(--accent2);
-    transform: translateY(-3px);
-  }
-
-  .cert-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-  .cert-name { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; }
-  .cert-type { font-size: 0.73rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .exp-desc { font-size: 0.95rem; color: var(--muted); line-height: 1.8; }
 
   /* CONTACT */
   .contact-wrap {
     text-align: center;
-    padding: 6rem 3rem;
-    max-width: 680px;
+    padding: 8rem 3rem;
+    max-width: 750px;
     margin: 0 auto;
   }
 
-  .contact-wrap h2 { margin-bottom: 1rem; }
+  .contact-wrap h2 { margin-bottom: 1.5rem; }
 
   .contact-wrap p {
     color: var(--muted);
-    margin-bottom: 2.5rem;
-    font-size: 1rem;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
     line-height: 1.8;
   }
 
   .contact-links {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.2rem;
     flex-wrap: wrap;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
   }
 
   .contact-item {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.8rem;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.8rem;
-    color: var(--muted);
+    border-radius: 4px;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text);
     font-family: 'DM Mono', monospace;
     text-decoration: none;
-    transition: all 0.25s;
+    transition: all 0.3s ease;
   }
 
-  .contact-item:hover { border-color: var(--accent); color: var(--accent); }
+  .contact-item svg {
+    fill: currentColor;
+    transition: transform 0.3s ease;
+  }
+
+  .contact-item:hover { 
+    border-color: var(--accent); 
+    color: var(--accent); 
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+
+  .contact-item:hover svg {
+    transform: scale(1.1);
+  }
 
   footer {
     border-top: 1px solid var(--border);
-    padding: 1.8rem 3rem;
+    padding: 2rem 3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: var(--subtle);
-    font-size: 0.73rem;
+    font-size: 0.8rem;
     font-family: 'DM Mono', monospace;
+    background: var(--bg);
   }
 
   .blob {
     position: fixed;
     border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.055;
+    filter: blur(100px);
+    opacity: 0.06;
     pointer-events: none;
     z-index: 0;
   }
 
   .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -200px; }
-  .blob-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 20%; left: -150px; }
+  .blob-2 { width: 400px; height: 400px; background: var(--accent2); bottom: 10%; left: -150px; }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes fadeLeft {
-    from { opacity: 0; transform: translateX(24px); }
+    from { opacity: 0; transform: translateX(30px); }
     to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes blinkCursor {
+    50% { border-color: transparent; }
   }
 
   .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
   }
 
   .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -629,15 +719,20 @@
   @media (max-width: 768px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    #hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; text-align: center; }
+    .hero-tag { justify-content: center; }
+    .hero-tag::before { display: none; }
+    .hero-sub { margin: 1.5rem auto; }
+    .hero-cta { justify-content: center; }
     .hero-card { order: -1; }
-    .hero-img-wrap { width: 220px; }
-    .hero-avatar-placeholder { height: 270px; }
-    .about-grid, .projects-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .cert-grid { grid-template-columns: 1fr; }
-    section { padding: 4rem 1.5rem; }
-    .skills-inner { padding: 4rem 1.5rem; }
-    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .hero-img-wrap { width: 260px; }
+    .hero-avatar-placeholder { height: 320px; }
+    .about-grid, .projects-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .exp-card { grid-template-columns: 1fr; gap: 1.5rem; text-align: center; }
+    .exp-icon { margin: 0 auto; }
+    section { padding: 5rem 1.5rem; }
+    .skills-inner { padding: 5rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
 </style>
 </head>
@@ -646,7 +741,7 @@
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 
-<nav>
+<nav id="navbar">
   <div class="nav-logo">Muizuddin.dev</div>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
@@ -657,26 +752,33 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <div style="max-width:1200px;margin:0 auto;">
   <section id="hero" style="margin:0;">
     <div>
-      <div class="hero-tag">Open to Opportunities</div>
+      <div class="hero-tag">Open for Internship Opportunities</div>
       <h1>Muhammad<br><em>Muizuddin</em><br>Bin Elias</h1>
-      <p class="hero-sub">IT undergraduate passionate about programming, design, and building systems that work — based in Kuala Lumpur, Malaysia.</p>
+      <p class="hero-sub"><span class="typewriter" id="typewriter-text"></span></p>
       <div class="hero-cta">
         <a href="#projects" class="btn btn-primary">View Projects ↓</a>
         <a href="#contact" class="btn btn-ghost">Get in Touch</a>
       </div>
     </div>
-    <div class="hero-card">
+    <div class="hero-card tilt-element">
       <div class="hero-img-wrap">
         <div class="hero-img-accent"></div>
         <div class="hero-img-bg"></div>
+        
         <div class="hero-avatar-placeholder">
-          <span class="avatar-icon">👤</span>
-          <span class="avatar-label">Muizuddin · IT Student</span>
+          <div class="hero-image-slider">
+            <img src="picture/m.jpeg" class="slider-img active" alt="Muizuddin 1" onerror="this.style.opacity='0';">
+            <img src="picture/munikl.jpeg" class="slider-img" alt="Muizuddin 2" onerror="this.style.opacity='0';">
+            <img src="picture/ph.jpeg" class="slider-img" alt="Muizuddin 3" onerror="this.style.opacity='0';">
+          </div>
+          
+          <span class="avatar-icon">👨‍💻</span>
+          <span class="avatar-label">Full-Stack & IoT Dev</span>
         </div>
+
         <div class="hero-badge">2024 – 2027 · UniKL MIIT</div>
       </div>
     </div>
@@ -685,28 +787,27 @@
 
 <div class="full-divider"></div>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="section-label">Who I Am</div>
   <h2>About Me</h2>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>I am a <strong>diploma student in Information Technology</strong> with a foundation in programming, design, and communication. My academic journey has equipped me with hands-on experience in database systems, object-oriented analysis and design, and operating systems.</p>
-      <p>I am constantly working to improve my <strong>programming and English communication skills</strong> — driven by a genuine curiosity and a desire to grow both technically and professionally.</p>
-      <p>Based in <strong>Kuala Lumpur, Malaysia</strong>, I am open to internships, collaborative projects, and opportunities that challenge me to create real-world impact through technology.</p>
+      <p>I am a <strong>Diploma in Information Technology</strong> student at Universiti Kuala Lumpur (MIIT), deeply passionate about building systems that bridge the gap between software and the physical world.</p>
+      <p>My academic and practical journey encompasses <strong>full-stack web development, relational databases, and IoT integration</strong>. Beyond coding, I actively explore network administration and system security fundamentals—analyzing network protocols to better understand how to build resilient, secure web applications.</p>
+      <p>Currently based in <strong>Kuala Lumpur, Malaysia</strong>, I am actively seeking an internship opportunity in web development or software engineering where I can contribute to real-world projects and continue growing technically.</p>
     </div>
     <div class="stats-grid reveal">
       <div class="stat-card">
-        <span class="stat-num">2</span>
-        <div class="stat-label">Projects Completed</div>
+        <span class="stat-num">3+</span>
+        <div class="stat-label">Major Projects Built</div>
       </div>
       <div class="stat-card">
-        <span class="stat-num">6+</span>
-        <div class="stat-label">Skills Acquired</div>
+        <span class="stat-num">12+</span>
+        <div class="stat-label">Tech Stacks Mastered</div>
       </div>
       <div class="stat-card">
-        <span class="stat-num">3</span>
-        <div class="stat-label">Certifications</div>
+        <span class="stat-num">2027</span>
+        <div class="stat-label">Graduation Year</div>
       </div>
       <div class="stat-card">
         <span class="stat-num">2</span>
@@ -718,147 +819,152 @@
 
 <div class="full-divider"></div>
 
-<!-- SKILLS -->
 <div class="skills-bg" id="skills">
   <div class="skills-inner">
-    <div class="section-label">What I Know</div>
-    <h2>Skills & Tools</h2>
+    <div class="section-label">Technical Arsenal</div>
+    <h2>Skills & Technologies</h2>
     <div class="skills-grid reveal">
-      <div class="skill-pill"><span class="skill-dot"></span> Java</div>
-      <div class="skill-pill"><span class="skill-dot"></span> PHP</div>
-      <div class="skill-pill"><span class="skill-dot"></span> MySQL</div>
-      <div class="skill-pill"><span class="skill-dot"></span> Database Design</div>
-      <div class="skill-pill"><span class="skill-dot"></span> Draw.io</div>
-      <div class="skill-pill"><span class="skill-dot"></span> Figma</div>
-      <div class="skill-pill"><span class="skill-dot"></span> UI / UX Design</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Laravel</div>
+      <div class="skill-pill"><span class="skill-dot"></span> PHP & MySQL</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Tailwind CSS</div>
+      <div class="skill-pill"><span class="skill-dot"></span> JavaScript</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Java & C++</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Linux / Unix</div>
       <div class="skill-pill"><span class="skill-dot"></span> Git & GitHub</div>
-      <div class="skill-pill"><span class="skill-dot"></span> SDLC</div>
-      <div class="skill-pill"><span class="skill-dot"></span> NetBeans IDE</div>
-      <div class="skill-pill"><span class="skill-dot"></span> Teamwork</div>
-      <div class="skill-pill"><span class="skill-dot"></span> Communication</div>
+      <div class="skill-pill"><span class="skill-dot"></span> ESP32 & Arduino</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Draw.io & Figma</div>
+      <div class="skill-pill"><span class="skill-dot"></span> VSCode & NetBeans</div>
+      <div class="skill-pill"><span class="skill-dot"></span> English (Proficient)</div>
+      <div class="skill-pill"><span class="skill-dot"></span> Malay (Native)</div>
     </div>
   </div>
 </div>
 
 <div class="full-divider"></div>
 
-<!-- PROJECTS -->
 <section id="projects">
-  <div class="section-label">What I've Built</div>
-  <h2>Projects</h2>
+  <div class="section-label">Featured Work</div>
+  <h2>Recent Projects</h2>
   <div class="projects-grid">
-    <div class="project-card reveal">
-      <div class="project-num">01 · 2025</div>
-      <div class="project-title">Student Attendance System</div>
-      <div class="project-subtitle">Design & Create</div>
-      <p class="project-desc">Designed and developed a complete student attendance tracking system. Used Draw.io to create system flow diagrams including Waterfall methodology charts and a relational database schema. Designed the mobile application interface in Figma for a smooth, intuitive user experience.</p>
+    
+    <div class="project-card featured reveal tilt-element">
+      <div class="project-num">FINAL YEAR PROJECT · Mar 2026 - Jul 2026</div>
+      <div class="project-title">Kinetic-Vault: IoT Smart Locker Rental System</div>
+      <div class="project-subtitle">Full-Stack Web & Hardware Integration</div>
+      <p class="project-desc">Designed and engineered a complete IoT-integrated smart locker platform tailored strictly for automated public space rentals. I developed the self-service web dashboard using Laravel, Tailwind CSS, and JavaScript, completely replacing traditional physical keys. The system handles secure Single Sign-On (SSO) via Google OAuth API and simulates cashless transactions using the ToyyibPay API sandbox. On the hardware side, I programmed an ESP32 microcontroller in C++ to process remote unlock commands and reliably trigger 12V electromagnetic locks via a relay board.</p>
       <div class="project-tags">
-        <span class="tag">Draw.io</span>
-        <span class="tag">Figma</span>
-        <span class="tag">UX Design</span>
-        <span class="tag">Relational DB</span>
-        <span class="tag">Waterfall</span>
+        <span class="tag">Laravel</span>
+        <span class="tag">Tailwind CSS</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">ESP32 / C++</span>
+        <span class="tag">Google OAuth</span>
+        <span class="tag">ToyyibPay API</span>
       </div>
     </div>
-    <div class="project-card reveal">
-      <div class="project-num">02</div>
-      <div class="project-title">Currency Converter System</div>
-      <div class="project-subtitle">Coding & Calculation</div>
-      <p class="project-desc">Built a currency converter application using Java that handles exchange rate calculations between multiple countries with different currency values. Developed in NetBeans IDE, demonstrating proficiency in Java programming, logic building, and arithmetic operations.</p>
+
+    <div class="project-card reveal tilt-element">
+      <div class="project-num">02 · May 2025 - Jul 2025</div>
+      <div class="project-title">Currency Converter</div>
+      <div class="project-subtitle">Java Desktop Application</div>
+      <p class="project-desc">Built a robust Java-based currency converter application using the NetBeans IDE. The system performs precise, real-time exchange rate calculations between multiple international currencies, demonstrating strong foundational skills in Object-Oriented Programming (OOP) and algorithmic logic building.</p>
       <div class="project-tags">
         <span class="tag">Java</span>
-        <span class="tag">NetBeans</span>
+        <span class="tag">NetBeans IDE</span>
         <span class="tag">OOP</span>
-        <span class="tag">Logic & Calc</span>
+        <span class="tag">Algorithms</span>
       </div>
     </div>
+
+    <div class="project-card reveal tilt-element">
+      <div class="project-num">03 · Early 2025</div>
+      <div class="project-title">Student Attendance System</div>
+      <div class="project-subtitle">System Design & UI/UX</div>
+      <p class="project-desc">Led the end-to-end design phase for a student attendance tracking platform. Utilized Draw.io to map out comprehensive system flow diagrams and relational database schemas based on the Waterfall methodology. Conceptualized the mobile interface in Figma to ensure an intuitive user experience.</p>
+      <div class="project-tags">
+        <span class="tag">Figma</span>
+        <span class="tag">Draw.io</span>
+        <span class="tag">Database Design</span>
+        <span class="tag">Waterfall SDLC</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <div class="full-divider"></div>
 
-<!-- EXPERIENCE -->
 <section id="experience">
-  <div class="section-label">Where I've Been</div>
-  <h2>Work Experience</h2>
+  <div class="section-label">Journey & Credentials</div>
+  <h2>Experience & Education</h2>
   <div class="exp-list">
+    
+    <div class="exp-card reveal">
+      <div class="exp-icon">🎓</div>
+      <div>
+        <div class="exp-company">Jul 2024 - Jan 2027 · Universiti Kuala Lumpur MIIT</div>
+        <div class="exp-role">Diploma in Information Technology</div>
+        <p class="exp-desc">Extensive coursework covering Object-Oriented Systems Analysis and Design (OOSAD), Database Systems, Mobile Application Development, Operating Systems, and Web Development.</p>
+      </div>
+    </div>
+
     <div class="exp-card reveal">
       <div class="exp-icon">🏢</div>
       <div>
-        <div class="exp-company">SIBS · Selangor International Business Summit</div>
-        <div class="exp-role">Event Crew Member</div>
-        <p class="exp-desc">Served as part of the launch crew for the Selangor International Business Summit — managing media coverage responsibilities, food & beverage coordination, and staffing the information counters during the event. Developed strong teamwork and event-management skills.</p>
+        <div class="exp-company">Selangor International Business Summit (SIBS)</div>
+        <div class="exp-role">Event Launch Crew</div>
+        <p class="exp-desc">Served as a critical part of the launch team, managing media coordination, food & beverage logistics, and staffing the primary information counters to ensure smooth event operations.</p>
       </div>
     </div>
+
     <div class="exp-card reveal">
-      <div class="exp-icon">🍌</div>
+      <div class="exp-icon">🏪</div>
       <div>
-        <div class="exp-company">Pishang Bites · Kiosk Operations</div>
-        <div class="exp-role">F&B Service Staff</div>
-        <p class="exp-desc">Worked at kiosk locations across Ampang and Saloma Bridge, handling customer order-taking, food preparation, and service delivery. Built strong communication, time management, and customer service capabilities in a fast-paced environment.</p>
+        <div class="exp-company">Pishang Bites</div>
+        <div class="exp-role">F&B Service Operations</div>
+        <p class="exp-desc">Managed high-volume kiosk operations across the Ampang and Saloma Bridge areas. Handled order taking, food preparation, and customer service in a fast-paced environment.</p>
       </div>
     </div>
+
   </div>
 </section>
 
 <div class="full-divider"></div>
 
-<!-- EDUCATION & CERTS -->
-<section id="education">
-  <div class="section-label">Credentials</div>
-  <h2>Education & Certifications</h2>
-
-  <div class="exp-card reveal">
-    <div class="exp-icon">🎓</div>
-    <div>
-      <div class="exp-company">2024 – 2027 · UniKL MIIT, Kuala Lumpur</div>
-      <div class="exp-role">Diploma in Information Technology</div>
-      <p class="exp-desc">Currently studying at UniKL Malaysian Institute of Information Technology, covering database systems, object-oriented analysis and design, programming languages, operating systems, and software development methodologies.</p>
-    </div>
-  </div>
-
-  <div class="cert-grid">
-    <div class="cert-card reveal">
-      <div class="cert-icon">📜</div>
-      <div class="cert-name">Malaysian Certificate of Education</div>
-      <div class="cert-type">SPM · Secondary Education</div>
-    </div>
-    <div class="cert-card reveal">
-      <div class="cert-icon">💻</div>
-      <div class="cert-name">GitHub Workshop</div>
-      <div class="cert-type">Version Control & Collaboration</div>
-    </div>
-    <div class="cert-card reveal">
-      <div class="cert-icon">🔄</div>
-      <div class="cert-name">SDLC Certification</div>
-      <div class="cert-type">Software Development Life Cycle</div>
-    </div>
-  </div>
-</section>
-
-<div class="full-divider"></div>
-
-<!-- CONTACT -->
 <div id="contact">
   <div class="contact-wrap">
     <div class="section-label" style="justify-content:center;">Let's Connect</div>
-    <h2>Get in Touch</h2>
-    <p>Whether you have an opportunity, a project idea, or just want to say hello — I'm happy to talk tech, design, and everything in between.</p>
-    <a href="mailto:muizuddin.elias@s.unikl.edu.my" class="btn btn-primary">Send an Email →</a>
+    <h2>Looking for a driven intern?</h2>
+    <p>I am currently looking for an internship in web development or software engineering. Whether you have an opportunity or just want to connect, my inbox is always open.</p>
+    <a href="mailto:muizudesu@gmail.com" class="btn btn-primary">Say Hello →</a>
+    
     <div class="contact-links">
-      <a href="tel:+60137877998" class="contact-item">📞 +60 13-787 7998</a>
-      <a href="mailto:muizuddin.elias@s.unikl.edu.my" class="contact-item">✉️ muizuddin.elias@s.unikl.edu.my</a>
-      <div class="contact-item">📍 Kuala Lumpur, Malaysia</div>
+      <a href="mailto:muizudesu@gmail.com" class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741zM1 11.105l4.708-2.897L1 5.383z"/></svg>
+        muizudesu@gmail.com
+      </a>
+      <a href="tel:+60137877998" class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M3.654 1.328a.678.678 0 0 0-.58-.196L1.545 2.41c-.626.456-.822 1.3-.454 1.964 2.494 4.587 6.135 8.228 10.587 10.72 1.058.592 2.33.257 2.965-.455l1.278-1.542a.678.678 0 0 0-.196-.58L12.054 11.1c-.26-.11-.59-.047-.827.162l-.891 1.083a12 12 0 0 1-4.145-4.146l1.083-.891c.217-.237.282-.568.162-.827l-1.956-2.99z"/></svg>
+        +60 13-787 7998
+      </a>
+      <a href="https://linkedin.com/in/mueez06" target="_blank" class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></svg>
+        LinkedIn: mueez06
+      </a>
+      <a href="https://github.com/Mueez-78" target="_blank" class="contact-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>
+        GitHub: Mueez-78
+      </a>
     </div>
   </div>
 </div>
 
 <footer>
   <span>© 2025 Muhammad Muizuddin Bin Elias</span>
-  <span>IT Undergraduate · Kuala Lumpur, MY</span>
+  <span>IT Undergraduate · Kuala Lumpur, Malaysia</span>
 </footer>
 
 <script>
+  // Intersection Observer for scroll animations
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -869,6 +975,107 @@
     });
   }, { threshold: 0.1 });
   reveals.forEach(el => observer.observe(el));
+
+  // Typewriter Effect for Hero Section
+  const texts = [
+    "Diploma in IT Student at UniKL MIIT.",
+    "Seeking an internship in Web Development.",
+    "Passionate about IoT and Software Engineering."
+  ];
+  let count = 0;
+  let index = 0;
+  let currentText = '';
+  let letter = '';
+  let isDeleting = false;
+
+  (function type() {
+    if (count === texts.length) {
+      count = 0;
+    }
+    currentText = texts[count];
+
+    if (isDeleting) {
+      letter = currentText.slice(0, --index);
+    } else {
+      letter = currentText.slice(0, ++index);
+    }
+
+    document.getElementById('typewriter-text').textContent = letter;
+
+    let typeSpeed = isDeleting ? 40 : 80;
+
+    if (!isDeleting && letter.length === currentText.length) {
+      typeSpeed = 2000;
+      isDeleting = true;
+    } else if (isDeleting && letter.length === 0) {
+      isDeleting = false;
+      count++;
+      typeSpeed = 500;
+    }
+    setTimeout(type, typeSpeed);
+  }());
+
+  // Minimal 3D Tilt Effect for specific elements
+  const tiltElements = document.querySelectorAll('.tilt-element');
+  tiltElements.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -5;
+      const rotateY = ((x - centerX) / centerX) * 5;
+      
+      el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+    });
+  });
+
+  // Slider Gambar Automatik + Boleh Diklik (Efek Tukar Kad)
+  const sliderContainer = document.querySelector('.hero-image-slider');
+  const sliderImagesElement = document.querySelectorAll('.slider-img');
+  let currentImgIndex = 0;
+  let slideTimer;
+
+  function changeSlide() {
+    if (sliderImagesElement.length === 0) return;
+
+    // 1. Gambar sekarang 'disapu' ke kiri (tambah kelas slide-out)
+    const currentImg = sliderImagesElement[currentImgIndex];
+    currentImg.classList.remove('active');
+    currentImg.classList.add('slide-out');
+
+    // Buang kelas slide-out selepas animasi siap supaya ia sedia di belakang balik
+    setTimeout(() => {
+      currentImg.classList.remove('slide-out');
+    }, 600); // 600ms ikut masa transition CSS
+
+    // 2. Kira indeks gambar seterusnya
+    currentImgIndex = (currentImgIndex + 1) % sliderImagesElement.length;
+
+    // 3. Gambar seterusnya bergerak ke depan (tambah kelas active)
+    sliderImagesElement[currentImgIndex].classList.add('active');
+  }
+
+  function startSlideTimer() {
+    slideTimer = setInterval(changeSlide, 4000); // Masa tukar automatik: 4 saat
+  }
+
+  if (sliderImagesElement.length > 0) {
+    // Mulakan timer automatik bila web dibuka
+    startSlideTimer();
+
+    // Fungsi klik: Bila user klik pada kotak gambar, ia terus bertukar
+    sliderContainer.addEventListener('click', () => {
+      clearInterval(slideTimer); // Reset timer automatik supaya animasi tak berlanggar
+      changeSlide(); // Terus jalankan efek tukar kad
+      startSlideTimer(); // Mula balik kiraan 4 saat
+    });
+  }
 </script>
 </body>
 </html>
